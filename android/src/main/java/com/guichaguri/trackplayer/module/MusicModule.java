@@ -372,7 +372,7 @@ public class MusicModule extends ReactContextBaseJavaModule implements ServiceCo
                 }
             }
 
-            callback.resolve(null);
+            callback.reject("track_not_in_queue", "Given track ID was not found in queue");
         });
     }
 
