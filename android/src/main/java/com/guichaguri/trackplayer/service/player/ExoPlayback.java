@@ -70,7 +70,7 @@ public abstract class ExoPlayback<T extends Player> implements EventListener {
 
     public Track getCurrentTrack() {
         int index = player.getCurrentWindowIndex();
-        return index == C.INDEX_UNSET || index < 0 || index >= queue.size() ? null : queue.get(index);
+        return index < 0 || index >= queue.size() ? null : queue.get(index);
     }
 
     public void skip(String id, Promise promise) {
@@ -137,7 +137,7 @@ public abstract class ExoPlayback<T extends Player> implements EventListener {
 
         player.stop(false);
         player.setPlayWhenReady(false);
-        player.seekTo(0,0);
+        player.seekTo(lastKnownWindow,0);
     }
 
     public void reset() {
@@ -161,7 +161,15 @@ public abstract class ExoPlayback<T extends Player> implements EventListener {
     }
 
     public long getDuration() {
-        return player.getDuration();
+        Track current = getCurrentTrack();
+
+        if (current != null && current.duration > 0) {
+            return current.duration;
+        }
+
+        long duration = player.getDuration();
+
+        return duration == C.TIME_UNSET ? 0 : duration;
     }
 
     public void seekTo(long time) {
@@ -186,7 +194,7 @@ public abstract class ExoPlayback<T extends Player> implements EventListener {
     public int getState() {
         switch(player.getPlaybackState()) {
             case Player.STATE_BUFFERING:
-                return PlaybackStateCompat.STATE_BUFFERING;
+                return player.getPlayWhenReady() ? PlaybackStateCompat.STATE_BUFFERING : PlaybackStateCompat.STATE_CONNECTING;
             case Player.STATE_ENDED:
                 return PlaybackStateCompat.STATE_STOPPED;
             case Player.STATE_IDLE:
