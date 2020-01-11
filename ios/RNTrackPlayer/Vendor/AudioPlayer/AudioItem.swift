@@ -36,9 +36,9 @@ public protocol InitialTiming {
     func getInitialTime() -> TimeInterval
 }
 
-/// Make your `AudioItem`-subclass conform to this protocol to control enable the ability to set authorization headers.
-public protocol Authorizing {
-    func getHeaders() -> [String: Any]
+/// Make your `AudioItem`-subclass conform to this protocol to set initialization options for the asset. Available keys available at [Apple Developer Documentation](https://developer.apple.com/documentation/avfoundation/avurlasset/initialization_options).
+public protocol AssetOptionsProviding {
+    func getAssetOptions() -> [String: Any]
 }
 
 public class DefaultAudioItem: AudioItem {
@@ -131,23 +131,23 @@ public class DefaultAudioItemInitialTime: DefaultAudioItem, InitialTiming {
     
 }
 
-/// An AudioItem that also conforms to the `Authorizing`-protocol
-public class DefaultAudioItemAuthorizing: DefaultAudioItem, Authorizing {
+/// An AudioItem that also conforms to the `AssetOptionsProviding`-protocol
+public class DefaultAudioItemAssetOptionsProviding: DefaultAudioItem, AssetOptionsProviding {
     
-    public var headers: [String: Any]
+    public var options: [String: Any]
     
     public override init(audioUrl: String, artist: String?, title: String?, albumTitle: String?, sourceType: SourceType, artwork: UIImage?) {
-        self.headers = [:]
+        self.options = [:]
         super.init(audioUrl: audioUrl, artist: artist, title: title, albumTitle: albumTitle, sourceType: sourceType, artwork: artwork)
     }
     
-    public init(audioUrl: String, artist: String?, title: String?, albumTitle: String?, sourceType: SourceType, artwork: UIImage?, headers: [String: Any]) {
-        self.headers = headers
+    public init(audioUrl: String, artist: String?, title: String?, albumTitle: String?, sourceType: SourceType, artwork: UIImage?, options: [String: Any]) {
+        self.options = options
         super.init(audioUrl: audioUrl, artist: artist, title: title, albumTitle: albumTitle, sourceType: sourceType, artwork: artwork)
     }
     
-    public func getHeaders() -> [String: Any] {
-        return headers
+    public func getAssetOptions() -> [String: Any] {
+        return options
     }
     
 }
