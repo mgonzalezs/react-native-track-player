@@ -405,12 +405,14 @@ public class RNTrackPlayer: RCTEventEmitter {
     public func skipToNext(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         print("Skipping to next track")
         do {
-            sendEvent(withName: "playback-track-changed", body: [
+            let body = [
                 "track": (player.currentItem as? Track)?.id,
                 "position": player.currentTime,
                 "nextTrack": (player.nextItems.first as? Track)?.id,
-                ])
+                ] as [String : Any];
             try player.next()
+            sendEvent(withName: "playback-track-changed", body: body )
+        
             resolve(NSNull())
         } catch (_) {
             reject("queue_exhausted", "There is no tracks left to play", nil)
@@ -421,12 +423,14 @@ public class RNTrackPlayer: RCTEventEmitter {
     public func skipToPrevious(resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         print("Skipping to next track")
         do {
-            sendEvent(withName: "playback-track-changed", body: [
+            let body = [
                 "track": (player.currentItem as? Track)?.id,
                 "position": player.currentTime,
                 "nextTrack": (player.previousItems.last as? Track)?.id,
-                ])
+                ] as [String : Any];
             try player.previous()
+            sendEvent(withName: "playback-track-changed", body: body )
+            
             resolve(NSNull())
         } catch (_) {
             reject("no_previous_track", "There is no previous track", nil)
