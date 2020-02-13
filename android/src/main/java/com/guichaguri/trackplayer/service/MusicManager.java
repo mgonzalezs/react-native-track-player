@@ -238,7 +238,7 @@ public class MusicManager implements OnAudioFocusChangeListener {
         bundle.putBoolean("endOfTrack", true);
         service.emit(MusicEvents.PLAYBACK_TRACK_CHANGED, bundle);
 
-        Bundle bundle = new Bundle();
+        bundle = new Bundle();
         bundle.putString("track", previous != null ? previous.id : null);
         bundle.putDouble("position", Utils.toSeconds(prevPos));
         service.emit(MusicEvents.PLAYBACK_QUEUE_ENDED, bundle);
